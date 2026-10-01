@@ -78,13 +78,13 @@ Steps
 
 8) Great, now we verify it worked. The Local Server page shows Domain: nahemalab.local instead of Workgroup.
 
-![Local Server showing domain](../SetUpScreenshots/06-local-server-domain.png)
+![Local Server showing domain](../SetupScreenshots/06-local-server-domain.png)
 
 ** The 3 paths explained: NTDS.dit is the actual AD database (every user and password hash, which is why attackers want it), the logs folder protects against crashes mid change, and SYSVOL is a shared folder that holds Group Policy files for every PC.
 
 9) We also want to confirm DNS got set up. Under Tools > DNS > Forward Lookup Zones, DC01 already registered itself at 10.0.2.10.
 
-![DNS zone with DC01 record](../SetUpScreenshots/07-dns-zone-dc01.png)
+![DNS zone with DC01 record](../SetupScreenshots/07-dns-zone-dc01.png)
 
 ** Also noticed a DNS Warning 4013 in the events. Normal on a brand new single DC; DNS just waits for AD to finish loading at startup.
 
@@ -92,5 +92,5 @@ Steps
 
 ** The Tools menu now has all the admin tools AD gave us: Active Directory Users and Computers, DNS, Group Policy Management, and more. That's where the next part starts.
 
-![Tools menu with AD tools](../SetUpScreenshots/08-tools-menu.png)
+![Tools menu with AD tools](../SetupScreenshots/08-tools-menu.png)
 
