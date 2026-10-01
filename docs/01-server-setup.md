@@ -49,7 +49,7 @@ Steps
 
 3) Great, now we check if it actually stuck by running ipconfig /all again. DHCP Enabled is now No, the lease lines are gone, and DNS points to 127.0.0.1.
 
-![ipconfig after](../SetUpScreenshots/05-ipconfig-after.png)
+![ipconfig after](../SetupScreenshots/05-ipconfig-after.png)
 
 ** Servers get static IPs because other things need to FIND them. Laptops use DHCP because nobody needs to look them up, they just go out and connect. Easy way I remember it: "if people come to it, it's static. If it goes to things, it's DHCP."
 
