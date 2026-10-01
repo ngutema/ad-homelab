@@ -19,7 +19,7 @@ Steps
 
 5) Windows gives the server a random name, so we rename it to DC01. Real companies name servers by their job, and renaming after it becomes a Domain Controller is a headache.
 
-** Fun fact: when Windows asked to make the PC discoverable, saying yes set the network to "private." DC01's whole job is to be found by other PCs, so that's exactly what we want.
+
 
 # Part 2: Giving the Server a Permanent Address
 
