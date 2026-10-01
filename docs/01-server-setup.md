@@ -37,6 +37,7 @@ Steps
 
 ** You might notice a little face drawn over the DNS Servers line. Those were my home internet provider's DNS addresses, passed through by VirtualBox. Not a real risk, but I covered them anyway since good habit is to never share details about your real network online. The 10.0.2.x addresses are safe to show since they're private and only exist inside my VirtualBox lab.
 
+
 2) Now we need to give DC01 its own permanent address. Under Ethernet > Properties > IPv4, I switched to "Use the following IP address" and entered:
    IP: 10.0.2.10 (an easy number to remember, away from the ones VirtualBox uses)
    Subnet mask: 255.255.255.0
@@ -44,6 +45,7 @@ Steps
    DNS: 127.0.0.1 (means "ask myself," since DC01 is about to become the DNS server)
 
 ![IPv4 static settings](../SetupScreenshots/04-ipv4-static-settings.png)
+
 
 3) Great, now we check if it actually stuck by running ipconfig /all again. DHCP Enabled is now No, the lease lines are gone, and DNS points to 127.0.0.1.
 
@@ -55,10 +57,12 @@ Steps
 
 ** The subnet mask 255.255.255.0 means the first three numbers (10.0.2) are the network and only the last one changes per device. That's why DC01 had to stay in 10.0.2.x.
 
+
 # Part 3: Turning the Server into a Domain Controller
 
 ## Dilemma: DC01 is still just a standalone server. It only knows its own accounts and has no control over any other PC.
 ## Objective: Create our domain, nahemalab.local, and make DC01 its Domain Controller.
+
 
 Steps
 
@@ -78,9 +82,11 @@ Steps
 
 8) Great, now we verify it worked. The Local Server page shows Domain: nahemalab.local instead of Workgroup.
 
+
 ![Local Server showing domain](../SetupScreenshots/06-local-server-domain.png)
 
 ** The 3 paths explained: NTDS.dit is the actual AD database (every user and password hash, which is why attackers want it), the logs folder protects against crashes mid change, and SYSVOL is a shared folder that holds Group Policy files for every PC.
+
 
 9) We also want to confirm DNS got set up. Under Tools > DNS > Forward Lookup Zones, DC01 already registered itself at 10.0.2.10.
 
