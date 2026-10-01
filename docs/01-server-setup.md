@@ -32,7 +32,7 @@ Steps
 1) First we need to see how DC01 is currently getting its address.
    On the DC01 Command Prompt:
    terminal> ipconfig /all
-   This shows DHCP Enabled: Yes, a 30 minute lease, and DNS pointing at my internet provider. So the address is borrowed.
+   This shows DHCP Enabled: Yes, a 30-minute lease, and DNS pointing to my internet provider. So the address is borrowed.
 
 ![ipconfig before](../SetupScreenshots/03-ipconfig-before.png)
 
@@ -52,11 +52,8 @@ Steps
 
 ![ipconfig after](../SetupScreenshots/05-ipconfig-after.png)
 
-** Servers get static IPs because other things need to FIND them. Laptops use DHCP because nobody needs to look them up, they just go out and connect. Easy way I remember it: "if people come to it, it's static. If it goes to things, it's DHCP."
-
-** DNS vs gateway confused me at first. DNS is the phonebook (looks up google.com's address), the gateway is the front door (actually carries the traffic out). You need both.
-
 ** The subnet mask 255.255.255.0 means the first three numbers (10.0.2) are the network and only the last one changes per device. That's why DC01 had to stay in 10.0.2.x.
+
 
 
 # Part 3: Turning the Server into a Domain Controller
