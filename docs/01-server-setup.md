@@ -7,11 +7,11 @@ Steps
 
 1) First we need to create a NAT Network in VirtualBox, which I named "ADLab." This gives our VMs their own private network where they can see each other, while still borrowing my laptop's internet.
 
-![ADLab NAT network](../SetUpscreenshots/01-nat-network-adlab.png)
+![ADLab NAT network](../SetupScreenshots/01-nat-network-adlab.png)
 
 2) Now that we have a network, we need a server to put on it. I made a new VM called DC01 (Domain Controller 1) with 4 GB RAM, 2 CPUs, and a 60 GB disk, which is enough to run smoothly while leaving my 16 GB laptop room to breathe.
 
-![DC01 VM settings](../SetUpscreenshots/02-dc01-vm-settings.png)
+![DC01 VM settings](../SetupScreenshots/02-dc01-vm-settings.png)
 
 3) Before finishing, we need to uncheck "Proceed with Unattended Installation." The auto install tends to grab the command line only version, and I wanted the normal Windows GUI.
 
@@ -33,7 +33,7 @@ Steps
    terminal> ipconfig /all
    This shows DHCP Enabled: Yes, a 30 minute lease, and DNS pointing at my internet provider. So the address is borrowed.
 
-![ipconfig before](../SetUpscreenshots/03-ipconfig-before.png)
+![ipconfig before](../SetupScreenshots/03-ipconfig-before.png)
 
 ** You might notice a little face drawn over the DNS Servers line. Those were my home internet provider's DNS addresses, passed through by VirtualBox. Not a real risk, but I covered them anyway since good habit is to never share details about your real network online. The 10.0.2.x addresses are safe to show since they're private and only exist inside my VirtualBox lab.
 
@@ -43,11 +43,11 @@ Steps
    Gateway: 10.0.2.1 (VirtualBox's mini router, the exit door to the internet)
    DNS: 127.0.0.1 (means "ask myself," since DC01 is about to become the DNS server)
 
-![IPv4 static settings](../SetUpscreenshots/04-ipv4-static-settings.png)
+![IPv4 static settings](../SetupScreenshots/04-ipv4-static-settings.png)
 
 3) Great, now we check if it actually stuck by running ipconfig /all again. DHCP Enabled is now No, the lease lines are gone, and DNS points to 127.0.0.1.
 
-![ipconfig after](../SetUpscreenshots/05-ipconfig-after.png)
+![ipconfig after](../SetUpScreenshots/05-ipconfig-after.png)
 
 ** Servers get static IPs because other things need to FIND them. Laptops use DHCP because nobody needs to look them up, they just go out and connect. Easy way I remember it: "if people come to it, it's static. If it goes to things, it's DHCP."
 
@@ -78,13 +78,13 @@ Steps
 
 8) Great, now we verify it worked. The Local Server page shows Domain: nahemalab.local instead of Workgroup.
 
-![Local Server showing domain](../SetUpscreenshots/06-local-server-domain.png)
+![Local Server showing domain](../SetUpScreenshots/06-local-server-domain.png)
 
 ** The 3 paths explained: NTDS.dit is the actual AD database (every user and password hash, which is why attackers want it), the logs folder protects against crashes mid change, and SYSVOL is a shared folder that holds Group Policy files for every PC.
 
 9) We also want to confirm DNS got set up. Under Tools > DNS > Forward Lookup Zones, DC01 already registered itself at 10.0.2.10.
 
-![DNS zone with DC01 record](../SetUpscreenshots/07-dns-zone-dc01.png)
+![DNS zone with DC01 record](../SetUpScreenshots/07-dns-zone-dc01.png)
 
 ** Also noticed a DNS Warning 4013 in the events. Normal on a brand new single DC; DNS just waits for AD to finish loading at startup.
 
@@ -92,5 +92,5 @@ Steps
 
 ** The Tools menu now has all the admin tools AD gave us: Active Directory Users and Computers, DNS, Group Policy Management, and more. That's where the next part starts.
 
-![Tools menu with AD tools](../SetUpscreenshots/08-tools-menu.png)
+![Tools menu with AD tools](../SetUpScreenshots/08-tools-menu.png)
 
