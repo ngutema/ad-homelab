@@ -9,9 +9,10 @@ Steps
 
 ![ADLab NAT network](../SetupScreenshots/01-nat-network-adlab.png)
 
-2) Now that we have a network, we need a server to put on it. I made a new VM called DC01 (Domain Controller 1) with 4 GB RAM, 2 CPUs, and a 60 GB disk, which is enough to run smoothly while leaving my 16 GB laptop room to breathe.
+2) Now that we have a network, we need a server to put on it. I made a new VM called DC01 (Domain Controller 1) with 4 GB RAM, 2 CPUs, and a 50 GB disk, which is enough to run smoothly while leaving my 16 GB laptop room to breathe.
 
 ![DC01 VM settings](../SetupScreenshots/02-dc01-vm-settings.png)
+
 
 3) Before finishing, we need to uncheck "Proceed with Unattended Installation." The auto install tends to grab the command line only version, and I wanted the normal Windows GUI.
 
