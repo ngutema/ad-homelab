@@ -8,16 +8,16 @@ Windows Server Active Directory home lab: domain setup, user management, Group P
 - Domain: nahemalab.local
 
 [Part 1-3: Building the server and creating the domain](docs/01-server-setup.md)
-- Built DC01 on a private VirtualBox network
-- Set a static IP and explained DNS vs gateway
-- Installed AD DS and created nahemalab.local
+- Installed Windows Server on a private virtual network
+- Configured a static IP address and DNS
+- Installed Active Directory and promoted the server to a Domain Controller
 
 [Part 4-6: Users, groups, and department shared folders](docs/02-users-groups-shares.md)
-- Built the BehelitTech company with IT, HR, and Sales OUs
-- Onboarded users and sorted them into security groups
-- Locked each department's folder with share and NTFS permissions
+- Created Organizational Units for each department
+- Created user accounts and added them to security groups
+- Set up shared folders with share and NTFS permissions
 
 [Part 7: Joining a Windows 11 PC to the domain](docs/03-client-join.md)
-- Built CLIENT01 and joined it to the domain
-- Troubleshot a paused server, wrong DNS, and a non admin PowerShell window
-- Tested access: Guts blocked from HR, Jon Snow allowed in
+- Configured client DNS and joined a Windows 11 PC to the domain
+- Troubleshot connectivity, DNS, and admin permission issues
+- Verified access control by testing allowed and denied users
