@@ -21,3 +21,9 @@ Windows Server Active Directory home lab: domain setup, user management, Group P
 - Configured client DNS and joined a Windows 11 PC to the domain
 - Troubleshot connectivity, DNS, and admin permission issues
 - Verified access control by testing allowed and denied users
+
+
+[Part 8: Help desk ticketing and real tickets](docs/04-help-desk-tickets.md)
+- Built a ticketing workflow with priority, tier, and category labels
+- Resolved a file share permission issue, a password reset, and a device service request
+- Documented each ticket with investigation, resolution, and root cause
