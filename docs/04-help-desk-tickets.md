@@ -1,4 +1,4 @@
-# Part 9: Setting Up a Ticketing System
+# Part 8: Setting Up a Ticketing System
 
 ## Dilemma: BehelitTech now has users, departments and shared folders, which means things will break. Right now there's no way for employees to report problems and no record of what IT fixed or how. Without that, issues get lost, the same problems keep coming back, and nobody knows what's been tried.
 ## Objective: Build a simple ticketing system so every problem gets logged, sorted by urgency, worked step by step and documented, the same way a real help desk runs.
@@ -32,7 +32,6 @@ Steps
 
 ![Ticket labels](../SetupScreenshots/05_labels.png)
 
-** I kept logins and folder permissions under one "access" label. Both are about someone not being able to get into something, and fewer labels keeps sorting simple for a small team.
 
 ** Every ticket gets one label from each group. For example, "forgot my password" is P3 + tier-1 + access. Tier and category are separate because the same kind of problem can need different people. A single forgotten password is tier 1, but if the server itself stops accepting logins, that's still an access problem but it becomes tier 2.
 
