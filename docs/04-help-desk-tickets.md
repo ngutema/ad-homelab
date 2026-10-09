@@ -45,7 +45,7 @@ Steps
 
 # Ticket #1: Can't Save Files in HR Folder (Incident)
 
-## Dilemma: Jon Snow from HR emailed saying he can open the HR folder but gets "access denied" when he tries to save or create a file. He needs to update the onboarding checklist today.
+## Dilemma: Jon Snow from HR emailed saying he can open the HR folder but gets "access denied" when he tries to save or create a file.
 ## Objective: Find out why Jon can read but not write, fix it, and make sure it doesn't happen to other departments.
 
 P3-medium / tier-1 / access
