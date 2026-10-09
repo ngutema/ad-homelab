@@ -1,6 +1,6 @@
 ---
 Help Desk Ticket
-About: Log a user issue or request
+about: Log a user issue or request
 ---
 
 Full name:
