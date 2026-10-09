@@ -1,5 +1,5 @@
 ---
-Help Desk Ticket
+name: Help Desk Ticket
 about: Log a user issue or request
 ---
 
