@@ -53,3 +53,17 @@ Fix that finally worked, in PowerShell run as administrator:
 ![Jon Snow inside HR](../SetupScreenshots/03_jsnow_hr.png)
 
 ** Network discovery stayed off. You don't need it to reach a share, since typing \\DC01\HR goes straight to the server by name. Plenty of companies keep it off so PCs aren't advertising themselves.
+
+
+# Conclusion
+
+At this point BehelitTech works like a real small office. There's a server running the domain, an employee PC joined to it, and users who can log in from any company computer with one account. Shared folders let each department in while keeping everyone else out.
+
+What I took away from this part
+- Every domain PC has to use the domain controller for DNS, or it can't find the domain at all
+- Ping and nslookup are net tools for dns config issues
+- "Access denied" on system settings usually means you're not running as admin
+
+
+
+Now With a working domain, users and a joined PC, the lab is ready for real help desk tickets.
