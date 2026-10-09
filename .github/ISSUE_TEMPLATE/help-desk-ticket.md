@@ -5,7 +5,8 @@ title: ""
 labels: ''
 ---
 
-User:
+Full name:
+Username:
 Department:
 Device:
 Contact method:
