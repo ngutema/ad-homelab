@@ -1,8 +1,6 @@
 ---
-name: Help Desk Ticket
-about: Log a user issue or request
-title: ""
-labels: ''
+Help Desk Ticket
+About: Log a user issue or request
 ---
 
 Full name:
