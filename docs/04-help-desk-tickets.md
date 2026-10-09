@@ -76,7 +76,6 @@ P3-medium / tier-1 / access
 
 ![Ticket 1 timeline](../SetupScreenshots/06_ticket1_ticket.png)
 
-Root cause: share permission was set to Read during the original setup, overriding the NTFS Modify permission. Prevention: check Effective Access after creating any new share.
 
 # Ticket #2: Forgot Password (Incident)
 
@@ -104,7 +103,7 @@ P3-medium / tier-1 / access
 
 ![Ticket 2 timeline](../SetupScreenshots/07_ticket2_ticket.png)
 
-Root cause: user forgot password after time away, no system issue. Prevention: self service password reset would let users handle this without IT (planned for the Microsoft 365 phase).
+
 
 # Ticket #3: Move CLIENT01 into BehelitTech (Service Request)
 
@@ -131,4 +130,21 @@ P4-low / tier-1 / device
 
 ![Ticket 3](../SetupScreenshots/08_ticket3_ticket.png)
 
-Root cause: new domain joined PCs go to the default Computers container. Prevention: move new devices into Workstations right after joining, or make Workstations the default location for new computers later.
+
+
+# Wrapping Up
+
+These three tickets cover some of the most common day to day help desk work: fixing folder permissions, resetting a password safely, and keeping devices organized in Active Directory. None of them are complicated on their own, but each one followed the same full process a real help desk uses: log it, reproduce it, find the root cause, fix it, verify it, tell the user and document it.
+
+What I took away from today
+- Always see the problem yourself before changing anything
+- Check both share and NTFS permissions, since the stricter one wins
+- Verify who's calling before touching any account
+- Never write passwords in a ticket
+- When you find one mistake, look for the same mistake elsewhere
+- Not every ticket is something broken. Service requests matter too.
+
+** The fix is usually the quick part. Writing down the root cause is what keeps the same ticket from coming back next week.
+
+What's next
+These tickets used tools that were already set up. Next I'll add Group Policy, which brings new things that can break: account lockouts, missing mapped drives and settings that don't apply. That means more realistic tickets to work.
