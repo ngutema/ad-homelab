@@ -19,8 +19,6 @@ Steps
 
 ![Password policy defaults](../SetupScreenshots/10_password_policy.png)
 
-** Enforce password history 24 means you can't reuse any of your last 24 passwords. I almost lowered it to 1 thinking it meant "stop reuse," but a higher number is actually stricter.
-
 ** Max password age is 42 days by default. Current guidance like NIST actually advises against forced regular changes, since people just go from Summer2026! to Fall2026!. Longer passwords and changing them only after a compromise work better.
 
 4) Next we open Account Lockout Policy. By default, there is no lockout at all, so an attacker could guess passwords forever.
