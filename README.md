@@ -60,4 +60,4 @@ A Windows Server Active Directory home lab where I build a small fake company, *
 - Built a ticketing workflow with priority, tier, and category labels
 - Resolved a share permission issue, a password reset, and a device service request
 - Documented each ticket with investigation, resolution, and root cause
-- 🎫 [View all tickets](../../issues?q=is%3Aissue
+-  [View all tickets](https://github.com/ngutema/ad-homelab/issues?q=is%3Aissue)
