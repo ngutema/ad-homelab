@@ -62,3 +62,8 @@ A Windows Server Active Directory home lab where I build a small fake company, *
 - Documented each ticket with investigation, resolution, and root cause
 -  [View all labels](https://github.com/ngutema/ad-homelab/labels)
 -  [View all tickets](https://github.com/ngutema/ad-homelab/issues?q=is%3Aissue)
+
+  ### [Part 9: Group Policy and account lockout](docs/05-group-policy.md)
+- Configured password and account lockout policies with Group Policy
+- Tested the lockout, then resolved a lockout ticket by unlocking instead of resetting
+- Wrote a [PowerShell script](scripts/Check-Lockout.ps1) to check any user's lockout status in one line
