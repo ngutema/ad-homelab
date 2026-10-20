@@ -67,3 +67,5 @@ A Windows Server Active Directory home lab where I build a small fake company, *
 - Configured password and account lockout policies with Group Policy
 - Tested the lockout, then resolved a lockout ticket by unlocking instead of resetting
 - Wrote a [PowerShell script](scripts/Check-Lockout.ps1) to check any user's lockout status in one line
+- Created department mapped drives linked to each OU and verified them with gpresult
+- Troubleshot a user placed in the wrong OU and cleaned up a leftover drive mapping
