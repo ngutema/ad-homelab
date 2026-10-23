@@ -177,13 +177,112 @@ P3-medium / tier-1 / access
 
 Root cause: account placed in the wrong OU during setup. Prevention: drive maps now remove themselves when a user leaves a department.
 
+
+# Part 11: Security Lockdown and Screen Lock
+
+## Dilemma: Every employee can open Control Panel and Settings, where they can change network settings, uninstall apps or mess with security options. And any PC left unattended stays unlocked for anyone to use.
+## Objective: Lock down settings for regular staff (HR and Sales) while IT keeps full access, and make every company PC lock itself when idle.
+
+Steps
+
+1) This time I created the policy in the Group Policy Objects folder first instead of on an OU, because one policy is going to be linked to two departments. Named it Staff - Restrictions.
+
+![Staff - Restrictions created](../SetupScreenshots/14_gpo_created.png)
+
+2) Inside it, under User Configuration > Policies > Administrative Templates > Control Panel, I enabled "Prohibit access to Control Panel and PC settings."
+
+![Control Panel restriction enabled](../SetupScreenshots/14_restrictions_setting.png)
+
+** Policies vs Preferences: the mapped drives were Preferences, which set things up but users can change them. Policies are enforced and can't be undone by the user, which is what security rules need.
+
+** I also looked through the Network Connections restrictions, but didn't turn them on. Most are already blocked because staff aren't local admins, and some would break VPN for remote workers. Every restriction should solve a real problem, otherwise it just creates tickets.
+
+![Network settings I chose not to enable](../SetupScreenshots/14_network_settings_skipped.png)
+
+3) Then we link the same policy to both HR and Sales with Link an Existing GPO. One policy, two places, so any future change only happens once.
+
+![Linking to Sales](../SetupScreenshots/14_restrictions_linked.png)
+
+4) Great, now we test. Don Draper in Sales gets blocked trying to open Control Panel, and gpresult shows Staff - Restrictions applied alongside his Sales drive.
+
+![Blocked](../SetupScreenshots/14_restriction_blocked.png)
+![gpresult for Don](../SetupScreenshots/14_gpresult_sales_restricted.png)
+
+Guts in IT can still open Control Panel, since the policy isn't linked to the IT OU.
+
+5) Next is the screen lock. This one is a computer policy, linked to the Workstations OU, so it locks the PC no matter who's logged in, even IT. Under Computer Configuration > Security Options, I set "Interactive logon: Machine inactivity limit." I tested with 60 seconds so I wouldn't have to wait, then set the real value of 600 (10 minutes). This setting needs a restart to kick in.
+
+![Screen lock set to 600 seconds](../SetupScreenshots/14_screen_lock_setting.png)
+
+6) Checking computer policies with gpresult /r /scope computer gave me access denied as a regular user. Instead of logging the user out, I opened Command Prompt with Run as administrator using my separate admin account, which is exactly what the two account setup is for.
+   terminal> gpresult /r /scope computer
+
+![Screen lock applied to the computer](../SetupScreenshots/14_gpresult_computer.png)
+
+** User policies follow the person and show under USER SETTINGS. Computer policies stay with the PC and show under COMPUTER SETTINGS. When a setting "isn't working," checking the right half of gpresult is step one.
+
+# Ticket #6: Sales Can Open Control Panel Again (Blind Troubleshooting)
+
+## Dilemma: My earlier tickets felt too easy because I broke things myself and already knew the answer. Real tickets don't come with the cause attached.
+## Objective: Troubleshoot a "policy not applying" ticket without knowing what changed, using evidence instead of guesses.
+
+P3-medium / tier-1 / access
+
+** How I set this up: I ran a [setup script](../scripts/Setup-Ticket6.ps1) that quietly made changes to Group Policy, without reading what it did. The scenario was designed with an AI assistant as a practice exercise. The commands come from Microsoft's GroupPolicy module (Set-GPLink and Set-GPPermission on Microsoft Learn). The troubleshooting below was all done blind.
+
+** The script itself fought me first. It kept saying "Staff - Restrictions" didn't exist, even though Get-GPO -All listed it. The name had a character that looked identical but wasn't, so I had PowerShell look it up with a wildcard instead of typing it. Scripts are picky about exact names.
+
+![Policy name mismatch](../SetupScreenshots/15_script_name_mismatch.png)
+
+1) Walter in IT reported that Sales staff can get into Control Panel again, but HR still looks locked down. Logged in as Don Draper, I confirmed it: Control Panel opens.
+
+![Control Panel opens for Don](../SetupScreenshots/15_ticket6_reproduced.png)
+
+2) Instead of walking to Don's PC, I tried pulling a Group Policy Results report remotely from DC01. It failed with "The RPC server is unavailable," because the Windows Firewall on workstations blocks remote management by default.
+
+![RPC error](../SetupScreenshots/15_ticket6_rpc_error.png)
+
+3) Rather than fixing that one PC by hand, I made a Workstations - Remote Management policy that allows Windows Management Instrumentation (WMI) through the firewall on every workstation. Now IT can pull reports from any company PC without bothering the user.
+
+![WMI firewall rules](../SetupScreenshots/15_remote_mgmt_rule.png)
+
+** WMI isn't remote control. It's like calling the PC's front desk and asking "which policies did you apply for Don?" Don doesn't see anything. Seeing his screen would be Remote Desktop or Quick Assist, which comes later.
+
+4) The report worked (after allowing it past the server's Internet Explorer Enhanced Security). Staff - Restrictions was under Denied GPOs with the reason "Disabled Link" on the Sales OU.
+
+![First cause: Disabled Link](../SetupScreenshots/15_ticket6_gp_results.png)
+
+5) Sure enough, the link on the Sales OU was switched off. I re-enabled it.
+
+![Link disabled](../SetupScreenshots/15_ticket6_link_disabled.png)
+![Link enabled](../SetupScreenshots/15_ticket6_link_enabled.png)
+
+6) But Don could STILL open Control Panel. A fresh report showed the policy still denied, now for a different reason: "Access Denied (Security Filtering)," with the filter set to HR-staff only.
+
+![Second cause: Security Filtering](../SetupScreenshots/15_ticket6_gp_results_2.png)
+
+** A policy has two gates. The link decides WHERE it applies (which OUs). Security Filtering decides WHO in those OUs is allowed to receive it. Don passed the first gate once the link was back, but the second gate only let HR-staff through.
+
+7) I had two options: add Sales-staff to the filter, or set it back to Authenticated Users (everyone who's logged in). I went with Authenticated Users. The OU links already decide who gets the policy, so managing it in two places just invites this exact ticket again. In a real job I'd also check whether someone narrowed it on purpose first.
+
+8) After the fix, Don is blocked again, HR is still blocked, and IT still has access.
+
+![Fixed: Authenticated Users and Don blocked](../SetupScreenshots/15_ticket6_fixed.png)
+
+** Only after solving it did I read the setup script. It matched exactly: one line disabled the Sales link, and two lines changed the security filtering.
+
+Root cause: two changes to Staff - Restrictions (Sales link disabled, security filtering narrowed to HR-staff). Prevention: audit Group Policy changes so we can see who changed what, which is what's next.
+
 # Wrapping Up
 
-Turning on one setting created a whole new type of ticket, which is pretty much how real IT works: every rule you add for security or convenience also adds something users can run into.
+Ticket #6 is the first one where I genuinely didn't know the answer, and it showed. Fixing the first cause and still seeing Control Panel open was frustrating, but that's what real troubleshooting looks like: you prove each cause with evidence and keep going until the problem is actually gone.
 
-The two things that stuck with me most: the Check-Lockout script, which came from a real annoyance of typing the same long command, and the OU vs group lesson from Joseph's ticket. Before this I would have assumed "he can see the drive, so he has access." Now I know those are decided in two completely different places.
+Biggest takeaways from Group Policy so far:
+- OUs decide which policies you get, groups and security filtering decide whether they actually apply
+- gpresult and Group Policy Results tell you not just what applied, but WHY something didn't
+- Fixing the tooling (remote management) once saves walking to every PC forever
 
-Next up in Group Policy: locking down settings for regular users, and troubleshooting a policy that doesn't apply.
+Next up: auditing, so changes like the ones in Ticket #6 leave a trail.
 
 
 
