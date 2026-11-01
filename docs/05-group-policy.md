@@ -273,16 +273,94 @@ P3-medium / tier-1 / access
 
 Root cause: two changes to Staff - Restrictions (Sales link disabled, security filtering narrowed to HR-staff). Prevention: audit Group Policy changes so we can see who changed what, which is what's next.
 
-# Wrapping Up
+# Part 12: Auditing and Non-Repudiation
 
-Ticket #6 is the first one where I genuinely didn't know the answer, and it showed. Fixing the first cause and still seeing Control Panel open was frustrating, but that's what real troubleshooting looks like: you prove each cause with evidence and keep going until the problem is actually gone.
+## Dilemma: Ticket #6 ended with an unanswered question: who changed the policy? Without logging, nobody can prove who did what, when or from where. Changes like that leave no trail.
+## Objective: Turn on auditing so the domain controller records logins, lockouts, group changes and policy changes, then prove each one shows up in the logs.
 
-Biggest takeaways from Group Policy so far:
-- OUs decide which policies you get, groups and security filtering decide whether they actually apply
-- gpresult and Group Policy Results tell you not just what applied, but WHY something didn't
-- Fixing the tooling (remote management) once saves walking to every PC forever
+Steps
 
-Next up: auditing, so changes like the ones in Ticket #6 leave a trail.
+1) We create a new policy called DC - Audit Policy and link it to the Domain Controllers OU, not BehelitTech. Logins and changes to users, groups and policies are all checked and recorded on the DC, so that's where logging has to be switched on.
+
+![Audit policy linked to Domain Controllers](../SetupScreenshots/16_audit_gpo_created.png)
+
+2) Under Computer Configuration > Policies > Windows Settings > Security Settings > Advanced Audit Policy Configuration > Audit Policies, everything starts as "Not configured." Out of the box, the DC writes down almost nothing useful.
+
+![Nothing audited by default](../SetupScreenshots/16_audit_before.png)
+
+** I used the Advanced Audit Policy instead of the basic Audit Policy folder. It gives finer control, and mixing the two can make them override each other, so I stuck to one.
+
+3) I turned on only what answers real questions (who logged in, who failed, who got locked out, who changed what), instead of logging everything and burying the important events in noise:
+
+| Category | Setting | Logged | Catches |
+|---|---|---|---|
+| Account Logon | Credential Validation | Success + Failure | Right and wrong passwords |
+| Account Logon | Kerberos Authentication Service | Success + Failure | Domain logins and failed ones |
+| Account Management | User Account Management | Success + Failure | Accounts created, reset, locked out |
+| Account Management | Security Group Management | Success | Someone added to or removed from a group |
+| DS Access | Directory Service Changes | Success | Changes inside AD, including policies |
+| Logon/Logoff | Logon | Success + Failure | Logins on the server itself |
+
+![Account Logon](../SetupScreenshots/16_audit_account_logon.png)
+![Account Management](../SetupScreenshots/16_audit_account_mgmt.png)
+![DS Access](../SetupScreenshots/16_audit_ds_access.png)
+![Logon/Logoff](../SetupScreenshots/16_audit_logon.png)
+
+4) After gpupdate /force, auditpol confirms what's actually active on the DC, not just what the policy says:
+   terminal> auditpol /get /category:*
+
+![auditpol showing the active settings](../SetupScreenshots/16_auditpol_verify.png)
+
+5) To test it, I made three things happen on purpose: typed a wrong password 5 times as Jordan Belfort, added Jordan to IT-staff, and changed the screen lock policy from 600 to 900 seconds. Then in Event Viewer > Windows Logs > Security, I filtered by event ID: 4771, 4740, 4728, 5136.
+
+![Filtered security log](../SetupScreenshots/16_event_list.png)
+
+| Event ID | Meaning |
+|---|---|
+| 4771 | Failed login (wrong password) |
+| 4740 | Account locked out |
+| 4728 | Member added to a security group |
+| 4729 | Member removed from a security group |
+| 5136 | Something in AD was changed (like a policy) |
+
+** Event IDs turn tens of thousands of log lines into a handful. My Security log had over 20,000 events, and filtering by four IDs brought it down to 25.
+
+6) Each event answers who, what, when and from where:
+
+4771 failed login: Jordan's account, and the Client Address 10.0.2.4 is CLIENT01. The log shows which machine the bad passwords came from, which is exactly how you'd trace an attack back to its source.
+
+![4771](../SetupScreenshots/16_event_4771.png)
+
+4740 lockout: Caller Computer Name: CLIENT01.
+
+![4740](../SetupScreenshots/16_event_4740.png)
+
+4728 group change: the Subject is who made the change (Administrator), the Member is Jordan, and the Group is IT-staff, logged to the second.
+
+![4728](../SetupScreenshots/16_event_4728.png)
+
+5136 policy change: the screen lock edit, made by NAHEMALAB\Administrator. This is the answer Ticket #6 was missing.
+
+![5136](../SetupScreenshots/16_event_5136.png)
+
+** My first try at the group change didn't show a 4728 at all. I had MOVED Jordan into the IT OU instead of ADDING him to the IT-staff group. Moving changes which policies he gets, adding changes what he can access, and only the group change is a 4728. Same OU vs group lesson as Joseph's ticket, this time showing up in the logs.
+
+![Moved into the IT OU by mistake](../SetupScreenshots/16_wrong_ou_mistake.png)
+![Added to IT-staff the right way](../SetupScreenshots/16_jordan_member_of.png)
+
+7) Cleanup gets logged too. Removing Jordan from IT-staff created a 4729, and setting the screen lock back to 600 created another 5136. Even undoing a change leaves a trail.
+
+![4729 removal](../SetupScreenshots/16_event_4729_cleanup.png)
+
+# Why This Matters: Non-Repudiation
+
+Non-repudiation means someone can't deny an action they took, because there's evidence tying it to them. Auditing is what creates that evidence: who did what, when, and from which machine.
+
+But the logs exposed a gap in my own setup. Every change today was made by NAHEMALAB\Administrator, a shared account. The log proves the account did it, but not which person. Anyone who knows that password could deny it. Real non-repudiation needs two things together:
+- Auditing, so every action is recorded
+- Individual named accounts (like my aby.admin), so every action traces back to one person
+
+That's the strongest argument yet for the separate admin accounts I set up in Part 8, and it's why companies lock down or disable the built in Administrator account.
 
 
 
