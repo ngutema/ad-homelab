@@ -71,10 +71,10 @@ A Windows Server Active Directory home lab where I build a small fake company, *
 - Troubleshot a user placed in the wrong OU and cleaned up a leftover drive mapping
 - Turned on auditing and traced logins, lockouts, group and policy changes in Event Viewer (non-repudiation)
 
-  ### [Part 13: Offboarding] (docs/06-offboarding.md)
+### [Part 13: Offboarding](docs/06-offboarding.md)
 - File auditing with the policy and a SACL on the folder (the two switches)
 - Shadow Copies set up before the incident
 - Contained the account first, and closed the open session gap
-- Proved the deletion with event 4659 (who, what, when, where)
+- Proved the delete with event 4659 (who, what, when, where)
 - Restored only the damaged files from Previous Versions
 - Full access removal: password reset, groups removed, Disabled Users OU
