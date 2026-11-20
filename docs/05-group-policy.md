@@ -358,9 +358,9 @@ Non-repudiation means someone can't deny an action they took, because there's ev
 
 But the logs exposed a gap in my own setup. Every change today was made by NAHEMALAB\Administrator, a shared account. The log proves the account did it, but not which person. Anyone who knows that password could deny it. Real non-repudiation needs two things together:
 - Auditing, so every action is recorded
-- Individual named accounts (like my aby.admin), so every action traces back to one person
+- Individual named accounts (like my nahema.admin), so every action traces back to one person
 
-That's the strongest argument yet for the separate admin accounts I set up in Part 8, and it's why companies lock down or disable the built in Administrator account.
+That's the strongest argument for a separate named admin account, which I created in [Part 14](07-offboarding-script.md) before running the offboarding script. It's also why companies lock down or disable the built in Administrator account.
 
 
 
