@@ -63,7 +63,7 @@ A Windows Server Active Directory home lab where I build a small fake company, *
 -  [View all labels](https://github.com/ngutema/ad-homelab/labels)
 -  [View all tickets](https://github.com/ngutema/ad-homelab/issues?q=is%3Aissue)
 
-  ### [Part 9-12: Group Policy ](docs/05-group-policy.md)
+### [Part 9-12: Group Policy](docs/05-group-policy.md)
 - Configured password and account lockout policies with Group Policy
 - Tested the lockout, then resolved a lockout ticket by unlocking instead of resetting
 - Wrote a [PowerShell script](scripts/Check-Lockout.ps1) to check any user's lockout status in one line
@@ -78,3 +78,11 @@ A Windows Server Active Directory home lab where I build a small fake company, *
 - Proved the delete with event 4659 (who, what, when, where)
 - Restored only the damaged files from Previous Versions
 - Full access removal: password reset, groups removed, Disabled Users OU
+
+### [Part 14: Automating offboarding with PowerShell](docs/07-offboarding-script.md)
+- Turned the Ticket #7 steps into one [offboarding script](scripts/Offboard-User.ps1) driven by a username and ticket number
+- Built in safety: existence check, typed confirmation, and a -WhatIf dry run
+- Logs every action with the admin and ticket, and logs failures honestly instead of claiming success
+- Replaced the shared Administrator with a named admin account so the log points at a person
+- Troubleshot a half-created user and a UAC elevation failure along the way
+- Verified the result independently and tested a mistyped username
